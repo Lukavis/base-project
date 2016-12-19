@@ -33,25 +33,8 @@ input::-moz-focus-inner, button::-moz-focus-inner { padding:0; border:0; }
 input, select { vertical-align:middle; }
 input[type=radio], input[type=checkbox] { margin:1px 4px 4px 0; }
 
-textarea {
-	overflow:auto;
-	resize:vertical;
-	-webkit-appearance:none;
-}
 
-input[type=button],
-input[type=submit],
-button {
-	cursor:pointer;
-	-webkit-appearance:none;
-}
 
-blockquote, q { quotes:none; }
-blockquote:before,
-blockquote:after,
-q:before,
-q:after { content:''; content:none; }
+*, *:after, *:before { box-sizing: border-box; }
 
-*, *:after, *:before { -webkit-box-sizing: border-box; box-sizing: border-box; }
-.clearfix::before, .clearfix::after { content: ''; display: table; }
-.clearfix::after { clear: both; }
+.clearfix::after { content: ''; display: block; height: 0; clear: both; }
