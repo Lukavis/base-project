@@ -1,6 +1,5 @@
 {
-  "name": "package.json",
-  "version": "1.0.0",
+  "name": "project",
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
