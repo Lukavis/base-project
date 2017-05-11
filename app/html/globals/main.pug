@@ -1,0 +1,26 @@
+doctype html
+html(lang="ru-RU")
+
+	include mixins
+	
+	head
+		meta(charset="utf-8")
+		meta(http-equiv='X-UA-Compatible', content="IE = edge")
+		meta(name="viewport" content="width=device-width,initial-scale=1, user-scalable=no")
+		meta(name="keywords" content="")
+	
+		block title
+			title Document
+	
+		block links
+			+styles('css/styles.min.css')
+
+	body
+		include ../partials/header
+	
+		block content
+	
+		include ../partials/footer
+	
+		script(src="js/libs.min.js")
+		script(src="js/index.js")

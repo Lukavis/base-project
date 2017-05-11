@@ -1,0 +1,15 @@
+spritePng($sprite-png) 
+    background-image $sprite-png[0]
+    background-size $sprite-png[2] $sprite-png[3]
+
+    @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) 
+        background-image $sprite-png[1]
+
+spriteSvg($sprite-svg) 
+    background-image $sprite-svg[0]
+    background-size $sprite-svg[1] $sprite-svg[2]
+
+spriteImg($imgName) 
+    width $imgName[0]
+    height $imgName[1]
+    background-position $imgName[2] $imgName[3]

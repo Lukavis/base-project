@@ -1,0 +1,5 @@
+$sprite-png = url('../img/sprites/{{{spritesheet.escaped_image}}}') url('../img/sprites/{{{retina_spritesheet.escaped_image}}}') {{spritesheet.px.width}} {{spritesheet.px.height}};
+
+{{#items}}
+${{name}} = {{px.width}} {{px.height}} {{px.offset_x}} {{px.offset_y}} ;
+{{/items}}

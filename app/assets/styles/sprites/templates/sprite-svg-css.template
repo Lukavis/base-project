@@ -1,0 +1,5 @@
+$sprite-svg = url('../img/sprites/{{sprite}}') {{spriteWidth}}px {{spriteHeight}}px;
+
+{{#shapes}}
+${{name}} = {{width.inner}}px {{height.inner}}px {{position.relative.x}}% {{position.relative.y}}%;
+{{/shapes}}
