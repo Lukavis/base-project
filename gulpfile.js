@@ -28,14 +28,20 @@ var isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV == 'developmen
 //Converting from Pug —> HTML
 gulp.task('html', function() {
 
-	return gulp.src('app/html/*.pug')
-		.pipe(pug())
-		.on('error', notify.onError({
-			title: 'HTML',
-			message: '<%= error.message %>'
-		}))
-		.pipe(beautify())
-		.pipe(gulp.dest('build'));	
+	return multipipe(
+
+		gulp.src('app/html/*.pug'),
+		
+		pug(),
+		
+		beautify(),
+
+		gulp.dest('build')
+
+	).on('error', notify.onError({
+		title: 'HTML',
+		message: '<%= error.message %>'
+	}));	
 
 });
 
@@ -43,22 +49,31 @@ gulp.task('html', function() {
 //Converting from Stylus —> CSS
 gulp.task('styles', function() {
 
-	return gulp.src('app/assets/styles/index.styl')	
-		.pipe(gulpIf(isDevelopment, srcmaps.init()))
-		.pipe(rename(function(path) {
+	return multipipe( 
+		
+		gulp.src('app/assets/styles/index.styl'),	
+		
+		gulpIf(isDevelopment, srcmaps.init()),
+		
+		rename(function(path) {
 			path.basename = 'styles.min';
-		}))
-		.pipe(stylus())
-		.on('error', notify.onError({
-			title: 'Styles',
-			message: '<%= error.message %>'
-		}))
-		.pipe(autoprefixer({
+		}),
+		
+		stylus(),
+		
+		autoprefixer({
             browsers: ['last 5 versions'],
             cascade: false
-        }))
-		.pipe(gulpIf(isDevelopment, srcmaps.write('.'), cleanCSS()))
-		.pipe(gulp.dest('build/css'))
+        }),
+		
+		gulpIf(isDevelopment, srcmaps.write('.'), cleanCSS()),
+		
+		gulp.dest('build/css')
+
+	).on('error', notify.onError({
+		title: 'Styles',
+		message: '<%= error.message %>'
+	}));
 
 });
 
@@ -89,13 +104,17 @@ gulp.task('sprite:svg-symbol', function() {
 	return gulp.src('app/assets/images/sprite-svg-symbol/**/*.svg')
 		.pipe(imagemin([imagemin.svgo( { plugins: [{removeViewBox: true}] } )]))
 		.pipe(svgSprite({
+			svg: {
+				xmlDeclaration: false
+			},
 			mode: {
 				symbol: {
+					inline: true,
 					dest: 'sprites',
 					sprite: "sprite-symbol.svg",
 					example: {
 						template: 'app/assets/styles/sprites/templates/sprite-svg-symbol.template',
-						dest: '../../../app/assets/styles/sprites/sprite-svg-symbol.html'
+						dest: '../../../app/assets/styles/sprites/sprite-svg-symbol.pug'
 					}
 				}
 			}

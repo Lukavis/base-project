@@ -28,6 +28,7 @@
     "gulp-uglify": "^2.1.2",
     "gulp.spritesmith": "^6.4.0",
     "merge-stream": "^1.0.1",
+    "multipipe": "^1.0.2",
     "vinyl-buffer": "^1.0.0"
   }
 }

@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "devDependencies": {
-    "jquery": "^3.2.1",
-    "svg4everybody": "^2.1.7"
+    "jquery": "^3.2.1"
   }
 }

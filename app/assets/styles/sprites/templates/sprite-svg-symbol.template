@@ -1,14 +1,13 @@
-.icon
 {{#shapes}}
-    &-{{name}}
-        height {{height.inner}}px  
-        width {{width.inner}}px
+.{{name}}
+    width {{width.inner}}px
+    height {{height.inner}}px  
 
 {{/shapes}}
 
 {{#shapes}}
 <!-- Image name: {{name}} -->
-svg.icon-{{name}}
-    use(xlink:href="img/sprites/{{sprite}}#{{name}}")
+svg.{{name}}
+    use(xlink:href="#{{name}}")
 
 {{/shapes}}
