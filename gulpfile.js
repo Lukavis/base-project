@@ -24,6 +24,57 @@ var del 			= require('del'),
 
 var isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV == 'development';
 
+var spriteConfig = {
+
+	symbol: {
+		svg: {
+			xmlDeclaration: false
+		},
+		mode: {
+			symbol: {
+				inline: true,
+				dest: 'sprites',
+				sprite: "sprite-symbol.svg",
+				example: {
+					template: 'app/assets/styles/sprites/templates/sprite-svg-symbol.template',
+					dest: '../../../app/assets/styles/sprites/sprite-svg-symbol.html'
+				}
+			}
+		}	
+	},
+	css: {
+		mode: {
+			css: {
+				dest: 'sprites',
+				sprite: 'sprite-css.svg',
+				prefix: '.%s',
+				bust: false,
+				render: {
+					styl: {
+						template: 'app/assets/styles/sprites/templates/sprite-svg-css.template',
+						dest: '../../../app/assets/styles/sprites/sprite-svg-css.styl'
+					}
+				}
+			}
+		}
+	},
+	png: {
+		retinaSrcFilter: 'app/assets/images/sprite-png/**/*@2x.png',
+		imgName: 'sprite.png',
+		retinaImgName: 'sprite@2x.png',
+		cssName: 'sprite-png.styl',
+		cssFormat: 'stylus',
+		algorithm: 'binary-tree',
+		cssTemplate: 'app/assets/styles/sprites/templates/sprite-png.template'
+	}
+
+}
+
+var bsConfig = {
+	server: './build',
+	files: ['./build/css/*.css'],
+	notify: false
+}
 
 //Converting from Pug —> HTML
 gulp.task('html', function() {
@@ -88,7 +139,7 @@ gulp.task('scripts', function() {
 });
 
 
-//Concating libraries
+//Concatinating libraries
 gulp.task('scripts:libs', function() {
 
 	return gulp.src(['app/assets/scripts/libs/jquery.min.js', 'app/assets/scripts/libs/**/*.js'])
@@ -103,22 +154,7 @@ gulp.task('sprite:svg-symbol', function() {
 
 	return gulp.src('app/assets/images/sprite-svg-symbol/**/*.svg')
 		.pipe(imagemin([imagemin.svgo( { plugins: [{removeViewBox: true}] } )]))
-		.pipe(svgSprite({
-			svg: {
-				xmlDeclaration: false
-			},
-			mode: {
-				symbol: {
-					inline: true,
-					dest: 'sprites',
-					sprite: "sprite-symbol.svg",
-					example: {
-						template: 'app/assets/styles/sprites/templates/sprite-svg-symbol.template',
-						dest: '../../../app/assets/styles/sprites/sprite-svg-symbol.pug'
-					}
-				}
-			}
-		}))
+		.pipe(svgSprite(spriteConfig.symbol))
 		.pipe(gulp.dest('build/img'));	
 
 });
@@ -129,22 +165,7 @@ gulp.task('sprite:svg-css', function() {
 
 	return gulp.src('app/assets/images/sprite-svg-css/**/*.svg')
 		.pipe(imagemin([imagemin.svgo( { plugins: [{removeViewBox: true}] } )]))
-		.pipe(svgSprite({
-			mode: {
-				css: {
-					dest: 'sprites',
-					sprite: 'sprite-css.svg',
-					prefix: '.%s',
-					bust: false,
-					render: {
-						styl: {
-							template: 'app/assets/styles/sprites/templates/sprite-svg-css.template',
-							dest: '../../../app/assets/styles/sprites/sprite-svg-css.styl'
-						}
-					}
-				}
-			}
-		}))
+		.pipe(svgSprite(spriteConfig.css))
 		.pipe(gulp.dest('build/img'));
 
 });
@@ -154,15 +175,7 @@ gulp.task('sprite:svg-css', function() {
 gulp.task('sprite:png', function() {
 
 	var spriteData = gulp.src('app/assets/images/sprite-png/**/*.png')
-		.pipe(spritesmith({
-			retinaSrcFilter: 'app/assets/images/sprite-png/**/*@2x.png',
-			imgName: 'sprite.png',
-			retinaImgName: 'sprite@2x.png',
-			cssName: 'sprite-png.styl',
-			cssFormat: 'stylus',
-			algorithm: 'binary-tree',
-			cssTemplate: 'app/assets/styles/sprites/templates/sprite-png.template'
-		}));
+		.pipe(spritesmith(spriteConfig.png));
 
 	var imgStream = spriteData.img
 		.pipe(buffer())
@@ -221,13 +234,10 @@ gulp.task('build', gulp.series(
 
 //Local server and browsers synchronization
 gulp.task('serve', function() {
-	browserSync.init({
-		server: './build',
-		notify: false
-	});
+	browserSync.init(bsConfig);
 
+	gulp.watch('app/**/*.styl', gulp.series('styles'));
 	gulp.watch('app/**/*.pug', gulp.series('html', reload));
-	gulp.watch('app/**/*.styl', gulp.series('styles', reload));
 	gulp.watch('app/assets/scripts/*.js', gulp.series('scripts', reload));
 	gulp.watch('app/assets/scripts/libs/*.js', gulp.series('scripts:libs', reload));
 	gulp.watch('app/assets/images/sprite-svg-symbol/*.svg', gulp.series('sprite:svg-symbol', reload));
