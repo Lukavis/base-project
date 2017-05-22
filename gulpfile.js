@@ -36,8 +36,8 @@ var spriteConfig = {
 				dest: 'sprites',
 				sprite: "sprite-symbol.svg",
 				example: {
-					template: 'app/assets/styles/sprites/templates/sprite-svg-symbol.template',
-					dest: '../../../app/assets/styles/sprites/sprite-svg-symbol.html'
+					template: 'app/css/sprites/templates/sprite-svg-symbol.template',
+					dest: '../../app/css/sprites/sprite-svg-symbol.html'
 				}
 			}
 		}	
@@ -51,21 +51,21 @@ var spriteConfig = {
 				bust: false,
 				render: {
 					styl: {
-						template: 'app/assets/styles/sprites/templates/sprite-svg-css.template',
-						dest: '../../../app/assets/styles/sprites/sprite-svg-css.styl'
+						template: 'app/css/sprites/templates/sprite-svg-css.template',
+						dest: '../../app/css/sprites/sprite-svg-css.styl'
 					}
 				}
 			}
 		}
 	},
 	png: {
-		retinaSrcFilter: 'app/assets/images/sprite-png/**/*@2x.png',
+		retinaSrcFilter: 'app/img/sprite-png/**/*@2x.png',
 		imgName: 'sprite.png',
 		retinaImgName: 'sprite@2x.png',
 		cssName: 'sprite-png.styl',
 		cssFormat: 'stylus',
 		algorithm: 'binary-tree',
-		cssTemplate: 'app/assets/styles/sprites/templates/sprite-png.template'
+		cssTemplate: 'app/css/sprites/templates/sprite-png.template'
 	}
 
 }
@@ -102,7 +102,7 @@ gulp.task('styles', function() {
 
 	return multipipe( 
 		
-		gulp.src('app/assets/styles/index.styl'),	
+		gulp.src('app/css/index.styl'),	
 		
 		gulpIf(isDevelopment, srcmaps.init()),
 		
@@ -132,7 +132,7 @@ gulp.task('styles', function() {
 //Minifying scripts
 gulp.task('scripts', function() {
 
-	return gulp.src('app/assets/scripts/*.js')
+	return gulp.src('app/js/*.js')
 		.pipe(uglify())
 		.pipe(gulp.dest('build/js'));
 
@@ -142,7 +142,7 @@ gulp.task('scripts', function() {
 //Concatinating libraries
 gulp.task('scripts:libs', function() {
 
-	return gulp.src(['app/assets/scripts/libs/jquery.min.js', 'app/assets/scripts/libs/**/*.js'])
+	return gulp.src(['app/js/libs/jquery.min.js', 'app/js/libs/**/*.js'])
 		.pipe(concat('libs.min.js'))
 		.pipe(gulp.dest('build/js'));
 
@@ -152,7 +152,7 @@ gulp.task('scripts:libs', function() {
 //Creating Symbol SVG sprite
 gulp.task('sprite:svg-symbol', function() {
 
-	return gulp.src('app/assets/images/sprite-svg-symbol/**/*.svg')
+	return gulp.src('app/img/sprite-svg-symbol/**/*.svg')
 		.pipe(imagemin([imagemin.svgo( { plugins: [{removeViewBox: true}] } )]))
 		.pipe(svgSprite(spriteConfig.symbol))
 		.pipe(gulp.dest('build/img'));	
@@ -163,7 +163,7 @@ gulp.task('sprite:svg-symbol', function() {
 //Creating CSS SVG sprite
 gulp.task('sprite:svg-css', function() {
 
-	return gulp.src('app/assets/images/sprite-svg-css/**/*.svg')
+	return gulp.src('app/img/sprite-svg-css/**/*.svg')
 		.pipe(imagemin([imagemin.svgo( { plugins: [{removeViewBox: true}] } )]))
 		.pipe(svgSprite(spriteConfig.css))
 		.pipe(gulp.dest('build/img'));
@@ -174,7 +174,7 @@ gulp.task('sprite:svg-css', function() {
 //Creating PNG sprite
 gulp.task('sprite:png', function() {
 
-	var spriteData = gulp.src('app/assets/images/sprite-png/**/*.png')
+	var spriteData = gulp.src('app/img/sprite-png/**/*.png')
 		.pipe(spritesmith(spriteConfig.png));
 
 	var imgStream = spriteData.img
@@ -183,7 +183,7 @@ gulp.task('sprite:png', function() {
 		.pipe(gulp.dest('build/img/sprites'));
 
 	var cssStream = spriteData.css
-		.pipe(gulp.dest('app/assets/styles/sprites/'));
+		.pipe(gulp.dest('app/css/sprites/'));
 
 	return merge(imgStream, cssStream);
 
@@ -193,7 +193,7 @@ gulp.task('sprite:png', function() {
 //Folding images to the build dir
 gulp.task('images', function() {
 
-	return gulp.src('app/assets/images/*.*')
+	return gulp.src('app/img/*.*')
 		.pipe(debug({title: 'images'}))
 		.pipe(imagemin([
 		    imagemin.gifsicle({interlaced: true}),
@@ -209,7 +209,7 @@ gulp.task('images', function() {
 //Folding fonts to the build dir
 gulp.task('fonts', function() {
 
-	return gulp.src('app/assets/fonts/**/*.*')
+	return gulp.src('app/fonts/**/*.*')
 		.pipe(debug({title: 'fonts'}))
 		.pipe(gulp.dest('build/fonts'));
 
@@ -238,13 +238,13 @@ gulp.task('serve', function() {
 
 	gulp.watch('app/**/*.styl', gulp.series('styles'));
 	gulp.watch('app/**/*.pug', gulp.series('html', reload));
-	gulp.watch('app/assets/scripts/*.js', gulp.series('scripts', reload));
-	gulp.watch('app/assets/scripts/libs/*.js', gulp.series('scripts:libs', reload));
-	gulp.watch('app/assets/images/sprite-svg-symbol/*.svg', gulp.series('sprite:svg-symbol', reload));
-	gulp.watch('app/assets/images/sprite-svg-css/*.svg', gulp.series('sprite:svg-css', reload));
-	gulp.watch('app/assets/images/sprite-png/*.png', gulp.series('sprite:png', reload));
-	gulp.watch('app/assets/images/*.*', gulp.series('images', reload));
-	gulp.watch('app/assets/fonts/**/*.*', gulp.series('fonts', reload));
+	gulp.watch('app/js/*.js', gulp.series('scripts', reload));
+	gulp.watch('app/js/libs/*.js', gulp.series('scripts:libs', reload));
+	gulp.watch('app/img/sprite-svg-symbol/*.svg', gulp.series('sprite:svg-symbol', reload));
+	gulp.watch('app/img/sprite-svg-css/*.svg', gulp.series('sprite:svg-css', reload));
+	gulp.watch('app/img/sprite-png/*.png', gulp.series('sprite:png', reload));
+	gulp.watch('app/img/*.*', gulp.series('images', reload));
+	gulp.watch('app/fonts/**/*.*', gulp.series('fonts', reload));
 	
 });
 
